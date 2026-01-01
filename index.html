@@ -66,6 +66,13 @@
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
         }
 
+        /* Maxsus "Savol" bloki uchun stil */
+        .thought-card {
+            background: radial-gradient(circle at center, rgba(0, 243, 255, 0.05) 0%, rgba(0,0,0,0.8) 100%);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
         /* Tugma Neon effekti */
         .btn-neon {
             border: 1px solid rgba(255,255,255,0.2);
@@ -121,7 +128,7 @@
             <div class="w-1 h-24 bg-gradient-to-b from-cyan-500 to-transparent mx-auto opacity-70"></div>
         </header>
 
-        <section class="container mx-auto px-6 mb-32">
+        <section class="container mx-auto px-6 mb-24">
             <div class="flex items-center justify-center mb-16 fade-in">
                 <div class="h-[1px] w-12 bg-gray-700"></div>
                 <h3 class="mx-4 text-xs uppercase tracking-[0.4em] text-cyan-500">Channels // Olamlar</h3>
@@ -158,6 +165,30 @@
                     </a>
                 </div>
 
+            </div>
+        </section>
+
+        <section class="container mx-auto px-6 mb-32 fade-in">
+            <div class="thought-card max-w-4xl mx-auto p-10 md:p-14 relative overflow-hidden group rounded-sm">
+                <div class="absolute -top-20 -right-20 w-64 h-64 bg-cyan-500 rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-1000"></div>
+                
+                <div class="text-center relative z-10">
+                    <div class="inline-block border border-cyan-500/30 px-4 py-1 mb-8">
+                        <span class="text-[10px] uppercase tracking-[0.3em] text-cyan-400">Atomic Question</span>
+                    </div>
+                    
+                    <h3 class="text-3xl md:text-5xl serif-font text-white mb-8 italic leading-snug">
+                        "Sizningcha, eng muhim hissiyot nima?"
+                    </h3>
+                    
+                    <p class="text-gray-400 text-sm font-light mb-10 max-w-lg mx-auto leading-relaxed">
+                        Bu shunchaki savol emas. Bu – sizning ichki olamingiz aksidir. Javobingiz qanday bo'lishidan qat'iy nazar, u siz haqingizda so'zlaydi.
+                    </p>
+                    
+                    <a href="https://t.me/Rivojlanish_Atomic/474" target="_blank" class="btn-neon px-12 py-4 text-xs uppercase tracking-[0.2em] inline-block text-white group-hover:bg-white group-hover:text-black transition-all">
+                        Fikr bildirish
+                    </a>
+                </div>
             </div>
         </section>
 
