@@ -17,85 +17,67 @@
             overflow-x: hidden;
         }
         
-        /* 3D Canvas orqa fonda turishi uchun */
+        /* 3D Canvas */
         #canvas-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0; /* Eng pastda */
-            pointer-events: none; /* Sichqoncha o'tib ketishi uchun */
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
         }
 
-        /* Kontent ustida turishi uchun */
-        #main-content {
-            position: relative;
-            z-index: 10;
-        }
+        #main-content { position: relative; z-index: 10; }
+        .serif-font { font-family: 'Cormorant Garamond', serif; }
 
-        .serif-font {
-            font-family: 'Cormorant Garamond', serif;
-        }
-
-        /* Intro Overlay (Kirish) */
+        /* Intro Overlay */
         #intro-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            z-index: 100; /* Eng tepada */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000; z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1.5s ease-in-out;
         }
 
-        /* Kartochkalar shishasimon effekti (Glassmorphism) */
+        /* SECRET TERMINAL (Yashirin) */
+        #secret-terminal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); z-index: 200;
+            display: none; /* Boshida ko'rinmaydi */
+            justify-content: center; align-items: center;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+        .terminal-box {
+            border: 1px solid #0f0; padding: 2rem; max-width: 600px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            background: rgba(0, 20, 0, 0.9);
+        }
+
+        /* Glass Cards */
         .glass-card {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.5s ease;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.5s ease;
         }
         .glass-card:hover {
-            border-color: rgba(0, 243, 255, 0.5);
-            transform: translateY(-5px);
+            border-color: rgba(0, 243, 255, 0.5); transform: translateY(-5px);
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
         }
 
-        /* Maxsus "Savol" bloki uchun stil */
+        /* Thought Card (Savol) */
         .thought-card {
             background: radial-gradient(circle at center, rgba(0, 243, 255, 0.05) 0%, rgba(0,0,0,0.8) 100%);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 243, 255, 0.2); backdrop-filter: blur(5px);
         }
 
-        /* Tugma Neon effekti */
+        /* Buttons */
         .btn-neon {
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s ease;
+            position: relative; overflow: hidden;
         }
         .btn-neon:hover {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
 
-        /* Scroll animatsiyalari */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s ease-out;
-        }
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Animations */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+        .visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body class="antialiased selection:bg-cyan-500 selection:text-black">
@@ -105,6 +87,19 @@
     </audio>
 
     <div id="canvas-container"></div>
+
+    <div id="secret-terminal" onclick="this.style.display='none'">
+        <div class="terminal-box">
+            <p class="mb-4 typing-effect">> ACCESS GRANTED.</p>
+            <p class="mb-4">> WELCOME TO THE CORE, ADMIN.</p>
+            <p class="mb-8 text-gray-400">"Haqiqat sirtda emas, kodlar ichida yashiringan."</p>
+            <div class="border-t border-green-900 pt-4">
+                <p>> SECRET CONTACT:</p>
+                <a href="https://t.me/SizningLichkangiz" class="text-white hover:text-cyan-400 underline decoration-dotted">@Admin_Contact</a>
+            </div>
+            <p class="mt-8 text-xs blink">_Press click to exit_</p>
+        </div>
+    </div>
 
     <div id="intro-overlay">
         <div class="text-center cursor-pointer group" onclick="startSystem()">
@@ -134,238 +129,198 @@
                 <h3 class="mx-4 text-xs uppercase tracking-[0.4em] text-cyan-500">Channels // Olamlar</h3>
                 <div class="h-[1px] w-12 bg-gray-700"></div>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                
                 <div class="glass-card p-6 fade-in">
                     <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
                         <img src="service.jpg" alt="Online Services" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                     </div>
                     <h4 class="text-2xl serif-font text-white mb-2">Online Services [] ΛTOMIC</h4>
-                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
-                        Raqamli olam navigatsiyasi. Chegarasiz imkoniyatlar makoni va ishonchli xizmatlar birlashuvi.
-                    </p>
-                    <a href="https://t.me/Online_Services_Atomic" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
-                        Kirish
-                    </a>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">Raqamli olam navigatsiyasi. Chegarasiz imkoniyatlar makoni.</p>
+                    <a href="https://t.me/Online_Services_Atomic" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">Kirish</a>
                 </div>
-
                 <div class="glass-card p-6 fade-in" style="transition-delay: 0.1s;">
                     <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
                         <img src="rivoj.jpg" alt="Rivojlanish" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                     </div>
                     <h4 class="text-2xl serif-font text-white mb-2">Rivojlanish [] ΛTOMIC</h4>
-                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
-                        Zehn va ruh yuksalishi. Ilm orqali o'zlikni anglash va shaxsiy rivojlanish sari qadam.
-                    </p>
-                    <a href="https://t.me/Rivojlanish_Atomic" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
-                        Kirish
-                    </a>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">Zehn va ruh yuksalishi. Ilm orqali o'zlikni anglash.</p>
+                    <a href="https://t.me/Rivojlanish_Atomic" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">Kirish</a>
                 </div>
-
             </div>
         </section>
 
         <section class="container mx-auto px-6 mb-32 fade-in">
-            <div class="thought-card max-w-4xl mx-auto p-10 md:p-14 relative overflow-hidden group rounded-sm">
+            <div class="thought-card max-w-4xl mx-auto p-10 md:p-14 relative overflow-hidden group rounded-sm text-center">
                 <div class="absolute -top-20 -right-20 w-64 h-64 bg-cyan-500 rounded-full blur-[100px] opacity-10 group-hover:opacity-30 transition-opacity duration-1000"></div>
-                
-                <div class="text-center relative z-10">
-                    <div class="inline-block border border-cyan-500/30 px-4 py-1 mb-8">
-                        <span class="text-[10px] uppercase tracking-[0.3em] text-cyan-400">Atomic Question</span>
-                    </div>
-                    
-                    <h3 class="text-3xl md:text-5xl serif-font text-white mb-8 italic leading-snug">
-                        "Sizningcha, eng muhim hissiyot nima?"
-                    </h3>
-                    
-                    <p class="text-gray-400 text-sm font-light mb-10 max-w-lg mx-auto leading-relaxed">
-                        Bu shunchaki savol emas. Bu – sizning ichki olamingiz aksidir. Javobingiz qanday bo'lishidan qat'iy nazar, u siz haqingizda so'zlaydi.
-                    </p>
-                    
-                    <a href="https://t.me/Rivojlanish_Atomic/474" target="_blank" class="btn-neon px-12 py-4 text-xs uppercase tracking-[0.2em] inline-block text-white group-hover:bg-white group-hover:text-black transition-all">
-                        Fikr bildirish
-                    </a>
+                <div class="relative z-10">
+                    <span class="text-[10px] uppercase tracking-[0.3em] text-cyan-400 border border-cyan-500/30 px-4 py-1 mb-8 inline-block">Atomic Question</span>
+                    <h3 class="text-3xl md:text-5xl serif-font text-white mb-8 italic">"Sizningcha, eng muhim hissiyot nima?"</h3>
+                    <a href="https://t.me/Rivojlanish_Atomic/474" target="_blank" class="btn-neon px-12 py-4 text-xs uppercase tracking-[0.2em] inline-block text-white hover:bg-white hover:text-black">Fikr bildirish</a>
                 </div>
             </div>
         </section>
 
-        <section class="container mx-auto px-6 mb-32">
-             <div class="flex items-center justify-center mb-16 fade-in">
+        <section class="container mx-auto px-6 mb-24">
+            <div class="flex items-center justify-center mb-16 fade-in">
                 <div class="h-[1px] w-12 bg-gray-700"></div>
                 <h3 class="mx-4 text-xs uppercase tracking-[0.4em] text-cyan-500">Bots // Vositalar</h3>
                 <div class="h-[1px] w-12 bg-gray-700"></div>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                
                 <div class="glass-card p-6 fade-in">
                     <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
                         <img src="guild.jpg" alt="GuildMaster" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                     </div>
                     <h4 class="text-2xl serif-font text-white mb-2">GuildMaster for Groups</h4>
-                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
-                        Guruhlar xavfsizligining mutlaq posboni. Sun'iy intellektga qarshi turuvchi ko'rinmas qalqon.
-                    </p>
-                    <a href="https://t.me/GuildMasterGroupsBot" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
-                        Ishga tushirish
-                    </a>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">Guruhlar xavfsizligining mutlaq posboni.</p>
+                    <a href="https://t.me/GuildMasterGroupsBot" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">Ishga tushirish</a>
                 </div>
-
                 <div class="glass-card p-6 fade-in" style="transition-delay: 0.1s;">
                     <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
                         <img src="deadpool.jpg" alt="Deadpool Taxi" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                     </div>
                     <h4 class="text-2xl serif-font text-white mb-2">Deadpool Taxi</h4>
-                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
-                        Tezlik va ishonch uyg'unligi. Vaqt qadrini biluvchilar uchun aniq yechim.
-                    </p>
-                    <a href="https://t.me/taxi_deadpool_bot" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
-                        Ishga tushirish
-                    </a>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">Tezlik va ishonch uyg'unligi.</p>
+                    <a href="https://t.me/taxi_deadpool_bot" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">Ishga tushirish</a>
                 </div>
+            </div>
+        </section>
 
+        <section class="container mx-auto px-6 mb-32 fade-in">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-t border-b border-gray-900 py-12">
+                <div>
+                    <h5 class="text-4xl md:text-5xl font-mono text-white mb-2 counter" data-target="99.9">0</h5>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">System Uptime %</p>
+                </div>
+                <div>
+                    <h5 class="text-4xl md:text-5xl font-mono text-cyan-400 mb-2 counter" data-target="154">0</h5>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Atomic Minds</p>
+                </div>
+                <div>
+                    <h5 class="text-4xl md:text-5xl font-mono text-cyan-400 mb-2 counter" data-target="540">0</h5>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Bot Users</p>
+                </div>
+                <div>
+                    <h5 class="text-4xl md:text-5xl font-mono text-white mb-2 counter" data-target="4">0</h5>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500">Active Projects</p>
+                </div>
             </div>
         </section>
 
         <footer class="text-center py-16 relative z-10 fade-in border-t border-gray-900/50 backdrop-blur-sm">
             <p class="text-gray-500 text-[10px] font-mono mb-4 tracking-widest">SYSTEM STATUS: STABLE</p>
             <a href="https://taplinkcreatorpro.up.railway.app/" target="_blank" class="group relative inline-block">
-                <span class="text-[10px] uppercase tracking-[0.3em] text-gray-400 group-hover:text-cyan-400 transition-colors duration-300">
-                    Created by Taplink Creator
-                </span>
-                <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-cyan-400 group-hover:w-full transition-all duration-500"></span>
+                <span class="text-[10px] uppercase tracking-[0.3em] text-gray-400 group-hover:text-cyan-400 transition-colors duration-300">Created by Taplink Creator</span>
             </a>
         </footer>
-
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <script>
-        // --- 1. TIZIMNI ISHGA TUSHIRISH (INTRO) ---
+        // --- 1. INTRO & START ---
         function startSystem() {
             const overlay = document.getElementById('intro-overlay');
             const content = document.getElementById('main-content');
             const audio = document.getElementById('bg-music');
-
-            // Musiqa
-            audio.volume = 0.5;
-            audio.play().catch(e => console.log("Audio play error:", e));
-
-            // Animatsiya
-            overlay.style.opacity = '0';
-            overlay.style.pointerEvents = 'none'; // Bosilmasligi uchun
             
+            audio.volume = 0.5;
+            audio.play().catch(console.log);
+
+            overlay.style.opacity = '0';
             setTimeout(() => {
+                overlay.style.display = 'none';
                 content.classList.remove('hidden');
                 triggerScrollAnimations();
+                startCounters(); // Statistika sanashni boshlaydi
             }, 1000);
         }
 
-        // --- 2. 3D ORQA FON (YADRO) ---
+        // --- 2. 3D BACKGROUND ---
         let scene, camera, renderer, core, particles;
-        
         function init3D() {
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x000000, 0.002); // Tuman
-
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            scene.fog = new THREE.FogExp2(0x000000, 0.002);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
             camera.position.z = 5;
-
             renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // MARKAZIY YADRO (Icosahedron)
-            const geometry = new THREE.IcosahedronGeometry(1.2, 1);
-            const material = new THREE.MeshBasicMaterial({ 
-                color: 0x00f3ff, // Neon moviy
-                wireframe: true,
-                transparent: true,
-                opacity: 0.3
-            });
-            core = new THREE.Mesh(geometry, material);
+            const geo = new THREE.IcosahedronGeometry(1.2, 1);
+            const mat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.3 });
+            core = new THREE.Mesh(geo, mat);
+            
+            const innerCore = new THREE.Mesh(new THREE.IcosahedronGeometry(0.5, 2), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            core.add(innerCore);
             scene.add(core);
 
-            // ICHKI YADRO
-            const innerGeo = new THREE.IcosahedronGeometry(0.5, 2);
-            const innerMat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false });
-            const innerCore = new THREE.Mesh(innerGeo, innerMat);
-            core.add(innerCore);
-
-            // ZARRACHALAR
             const pGeo = new THREE.BufferGeometry();
-            const pCount = 1500;
-            const pPos = new Float32Array(pCount * 3);
-            for(let i=0; i<pCount*3; i++) {
-                pPos[i] = (Math.random() - 0.5) * 15; // Kengroq tarqalish
-            }
+            const pPos = new Float32Array(1500 * 3);
+            for(let i=0; i<1500*3; i++) pPos[i] = (Math.random()-0.5)*15;
             pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-            const pMat = new THREE.PointsMaterial({
-                size: 0.005,
-                color: 0x00f3ff,
-                transparent: true,
-                opacity: 0.5
-            });
-            particles = new THREE.Points(pGeo, pMat);
+            particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ size: 0.005, color: 0x00f3ff, transparent: true, opacity: 0.5 }));
             scene.add(particles);
-
-            // Resizing
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
 
             animate();
         }
-
         function animate() {
             requestAnimationFrame(animate);
-            
-            const time = Date.now() * 0.0005;
-
-            // Aylanishlar
-            core.rotation.x += 0.001;
             core.rotation.y += 0.002;
-            
-            // Nafas olish effekti
-            const scale = 1 + Math.sin(time) * 0.1;
-            core.scale.set(scale, scale, scale);
-
-            // Zarrachalar harakati
-            particles.rotation.y = -time * 0.05;
-
-            // Sichqonchaga reaksiya (yengil)
-            // (Agar murakkablik kerak bo'lmasa, shart emas)
-
+            core.scale.setScalar(1 + Math.sin(Date.now()*0.0005)*0.1);
+            particles.rotation.y = -Date.now()*0.00005;
             renderer.render(scene, camera);
         }
+        init3D();
 
-        // --- 3. SCROLL ANIMATSIYALARI ---
-        function triggerScrollAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+        // --- 3. STATISTIKA ANIMATSIYASI ---
+        function startCounters() {
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const speed = 200; // Tezlik
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target;
                     }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.fade-in').forEach((el) => {
-                observer.observe(el);
+                };
+                updateCount();
             });
         }
 
-        // Ishga tushirish
-        init3D();
+        // --- 4. ANIMATION OBSERVER ---
+        function triggerScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
 
+        // --- 5. EASTER EGG (SECRET TERMINAL) ---
+        let keySequence = [];
+        const secretCode = "atomic";
+        
+        document.addEventListener('keydown', (e) => {
+            keySequence.push(e.key.toLowerCase());
+            if (keySequence.length > secretCode.length) {
+                keySequence.shift();
+            }
+            if (keySequence.join('') === secretCode) {
+                document.getElementById('secret-terminal').style.display = 'flex';
+                // Ovoz effekti bo'lsa zo'r bo'lardi
+            }
+        });
     </script>
 </body>
 </html>
