@@ -2,517 +2,338 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ΛTOMIC | Hyperstructure Core</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATOMIC | Ultimate Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- CSS: THE VOID UI --- */
-        :root {
-            --c-accent: #00f3ff; /* Neon moviy */
-            --c-bg: #020204;    /* Chuqur qora */
-            --f-mono: 'Courier Prime', monospace;
-        }
+        /* Asosiy sozlamalar */
         body {
             margin: 0;
-            overflow: hidden;
-            background-color: var(--c-bg);
-            font-family: var(--f-mono);
-            color: #fff;
-        }
-        canvas {
-            display: block;
-            position: absolute;
-            top: 0; left: 0;
-            z-index: 0;
-            outline: none;
+            background-color: #000;
+            color: #e0e0e0;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
         }
         
-        /* UI Qatlami */
-        #ui-overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+        /* 3D Canvas orqa fonda turishi uchun */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Eng pastda */
+            pointer-events: none; /* Sichqoncha o'tib ketishi uchun */
+        }
+
+        /* Kontent ustida turishi uchun */
+        #main-content {
+            position: relative;
             z-index: 10;
-            pointer-events: none; /* 3D olamga sichqoncha o'tishi uchun */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 2rem;
-            box-sizing: border-box;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
         }
 
-        /* Header */
-        .header {
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            display: flex;
-            justify-content: space-between;
-            opacity: 0.7;
+        .serif-font {
+            font-family: 'Cormorant Garamond', serif;
         }
 
-        /* Markaziy matn */
-        .center-stage {
-            text-align: center;
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: auto;
-        }
-        h1.atomic-title {
-            font-size: 4rem;
-            margin: 0;
-            letter-spacing: 0.5em;
-            font-weight: 900;
-            text-shadow: 0 0 30px var(--c-accent), 0 0 10px rgba(255,255,255,0.8);
-            animation: pulseTitle 4s infinite ease-in-out;
-        }
-        .status-text {
-            font-size: 0.8rem;
-            opacity: 0.6;
-            margin-top: 1rem;
-            letter-spacing: 0.3em;
-        }
-
-        /* Navigatsiya (Tugmalar) */
-        .nav-dock {
+        /* Intro Overlay (Kirish) */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 100; /* Eng tepada */
             display: flex;
-            gap: 1rem;
             justify-content: center;
-            margin-top: 3rem;
-            pointer-events: auto;
+            align-items: center;
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
         }
-        .atomic-btn {
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid var(--c-accent);
-            color: var(--c-accent);
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-size: 0.9rem;
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+        /* Kartochkalar shishasimon effekti (Glassmorphism) */
+        .glass-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 243, 255, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
+        }
+
+        /* Tugma Neon effekti */
+        .btn-neon {
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-        .atomic-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.4), transparent);
-            transition: 0.5s;
-        }
-        .atomic-btn:hover {
-            background: var(--c-accent);
+        .btn-neon:hover {
+            background: #fff;
             color: #000;
-            box-shadow: 0 0 50px var(--c-accent);
-        }
-        .atomic-btn:hover::before {
-            left: 100%;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
 
-        /* Footer */
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            opacity: 0.4;
-            letter-spacing: 0.1em;
+        /* Scroll animatsiyalari */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
         }
-
-        /* Animatsiyalar */
-        @keyframes pulseTitle {
-            0%, 100% { opacity: 1; filter: blur(0px); }
-            50% { opacity: 0.8; filter: blur(2px); }
-        }
-        
-        /* Kichik ekranlar uchun */
-        @media (max-width: 768px) {
-            h1.atomic-title { font-size: 2rem; letter-spacing: 0.2em; }
-            .nav-dock { flex-direction: column; }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-cyan-500 selection:text-black">
 
-    <div id="ui-overlay">
-        <div class="header">
-            <div>System: Online</div>
-            <div>[ ATOMIC PROTOCOL ]</div>
-        </div>
-        <div class="center-stage">
-            <div class="status-text">/// TIZIM MUSTAQIL. ANGLASS — IXTIYORIY. ///</div>
-            <h1 class="atomic-title">ΛTOMIC</h1>
-            
-            <div class="nav-dock">
-                <a href="https://t.me/Online_Services_Atomic" target="_blank" class="atomic-btn">Channels</a>
-                <a href="https://t.me/GuildMasterGroupsBot" target="_blank" class="atomic-btn">Bots</a>
+    <audio id="bg-music" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="canvas-container"></div>
+
+    <div id="intro-overlay">
+        <div class="text-center cursor-pointer group" onclick="startSystem()">
+            <div class="mb-6 relative">
+                <div class="absolute inset-0 bg-cyan-500 blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+                <h1 class="text-5xl md:text-7xl serif-font italic text-white tracking-widest relative z-10">Λ T O M I C</h1>
             </div>
-        </div>
-        <div class="footer">
-            <div>Coordinates: Unknown</div>
-            <div>Created by Taplink Creator</div>
+            <p class="text-[10px] md:text-xs tracking-[0.6em] text-cyan-400 group-hover:text-white transition-colors duration-500 uppercase border-t border-b border-transparent group-hover:border-cyan-500 py-2 inline-block">
+                Initialize System
+            </p>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <main id="main-content" class="min-h-screen hidden">
+        
+        <header class="container mx-auto px-6 pt-32 pb-20 text-center fade-in">
+            <h2 class="text-3xl md:text-5xl serif-font font-thin text-gray-200 mb-8 italic leading-tight">
+                "Zulmatda yo'l topish uchun ko'zlar emas,<br> 
+                <span class="text-cyan-400 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">Ishonch</span> va <span class="text-cyan-400 drop-shadow-[0_0_10px_rgba(0,243,255,0.5)]">Ilm</span> kerak."
+            </h2>
+            <div class="w-1 h-24 bg-gradient-to-b from-cyan-500 to-transparent mx-auto opacity-70"></div>
+        </header>
 
+        <section class="container mx-auto px-6 mb-32">
+            <div class="flex items-center justify-center mb-16 fade-in">
+                <div class="h-[1px] w-12 bg-gray-700"></div>
+                <h3 class="mx-4 text-xs uppercase tracking-[0.4em] text-cyan-500">Channels // Olamlar</h3>
+                <div class="h-[1px] w-12 bg-gray-700"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                
+                <div class="glass-card p-6 fade-in">
+                    <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
+                        <img src="service.jpg" alt="Online Services" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                    </div>
+                    <h4 class="text-2xl serif-font text-white mb-2">Online Services [] ΛTOMIC</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
+                        Raqamli olam navigatsiyasi. Chegarasiz imkoniyatlar makoni va ishonchli xizmatlar birlashuvi.
+                    </p>
+                    <a href="https://t.me/Online_Services_Atomic" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
+                        Kirish
+                    </a>
+                </div>
+
+                <div class="glass-card p-6 fade-in" style="transition-delay: 0.1s;">
+                    <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
+                        <img src="rivoj.jpg" alt="Rivojlanish" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                    </div>
+                    <h4 class="text-2xl serif-font text-white mb-2">Rivojlanish [] ΛTOMIC</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
+                        Zehn va ruh yuksalishi. Ilm orqali o'zlikni anglash va shaxsiy rivojlanish sari qadam.
+                    </p>
+                    <a href="https://t.me/Rivojlanish_Atomic" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
+                        Kirish
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="container mx-auto px-6 mb-32">
+             <div class="flex items-center justify-center mb-16 fade-in">
+                <div class="h-[1px] w-12 bg-gray-700"></div>
+                <h3 class="mx-4 text-xs uppercase tracking-[0.4em] text-cyan-500">Bots // Vositalar</h3>
+                <div class="h-[1px] w-12 bg-gray-700"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                
+                <div class="glass-card p-6 fade-in">
+                    <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
+                        <img src="guild.jpg" alt="GuildMaster" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                    </div>
+                    <h4 class="text-2xl serif-font text-white mb-2">GuildMaster for Groups</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
+                        Guruhlar xavfsizligining mutlaq posboni. Sun'iy intellektga qarshi turuvchi ko'rinmas qalqon.
+                    </p>
+                    <a href="https://t.me/GuildMasterGroupsBot" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
+                        Ishga tushirish
+                    </a>
+                </div>
+
+                <div class="glass-card p-6 fade-in" style="transition-delay: 0.1s;">
+                    <div class="relative overflow-hidden mb-6 h-64 border border-gray-800">
+                        <img src="deadpool.jpg" alt="Deadpool Taxi" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 transform hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                    </div>
+                    <h4 class="text-2xl serif-font text-white mb-2">Deadpool Taxi</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed border-l-2 border-cyan-900 pl-4">
+                        Tezlik va ishonch uyg'unligi. Vaqt qadrini biluvchilar uchun aniq yechim.
+                    </p>
+                    <a href="https://t.me/taxi_deadpool_bot" target="_blank" class="btn-neon px-8 py-3 text-[10px] uppercase tracking-widest inline-block text-white">
+                        Ishga tushirish
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="text-center py-16 relative z-10 fade-in border-t border-gray-900/50 backdrop-blur-sm">
+            <p class="text-gray-500 text-[10px] font-mono mb-4 tracking-widest">SYSTEM STATUS: STABLE</p>
+            <a href="https://taplinkcreatorpro.up.railway.app/" target="_blank" class="group relative inline-block">
+                <span class="text-[10px] uppercase tracking-[0.3em] text-gray-400 group-hover:text-cyan-400 transition-colors duration-300">
+                    Created by Taplink Creator
+                </span>
+                <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-cyan-400 group-hover:w-full transition-all duration-500"></span>
+            </a>
+        </footer>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
-        /**
-         * =========================================
-         * ΛTOMIC HYPERCORE ENGINE v1.0
-         * Author: Taplink Creator AI Architecture
-         * Complexity Level: HIGH
-         * =========================================
-         */
+        // --- 1. TIZIMNI ISHGA TUSHIRISH (INTRO) ---
+        function startSystem() {
+            const overlay = document.getElementById('intro-overlay');
+            const content = document.getElementById('main-content');
+            const audio = document.getElementById('bg-music');
 
-        // --- KONFIGURATSIYA ---
-        const CONFIG = {
-            cameraZ: 15,
-            coreSize: 3,
-            particleCount: 5000,
-            bloomStrength: 2.5,
-            bloomRadius: 0.5,
-            bloomThreshold: 0.1,
-            colors: {
-                primary: 0x00f3ff, // Neon Blue
-                secondary: 0xff00aa // Neon Pink (aksent uchun)
-            }
-        };
+            // Musiqa
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log("Audio play error:", e));
 
-        // --- GLSL SHADERS (Tizimning "Ruhi") ---
-        // Bu qism oddiy ranglarni jonli, pulsatsiyalanuvchi energiyaga aylantiradi.
+            // Animatsiya
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none'; // Bosilmasligi uchun
+            
+            setTimeout(() => {
+                content.classList.remove('hidden');
+                triggerScrollAnimations();
+            }, 1000);
+        }
+
+        // --- 2. 3D ORQA FON (YADRO) ---
+        let scene, camera, renderer, core, particles;
         
-        const CORE_VERTEX_SHADER = `
-            varying vec2 vUv;
-            varying vec3 vPosition;
-            varying vec3 vNormal;
-            uniform float uTime;
+        function init3D() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000000, 0.002); // Tuman
 
-            // Shovqin funksiyasi (Murakkab matematik deformatsiya)
-            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
-            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-            float snoise(vec3 v) {
-                const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
-                const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
-                vec3 i  = floor(v + dot(v, C.yyy) );
-                vec3 x0 = v - i + dot(i, C.xxx) ;
-                vec3 g = step(x0.yzx, x0.xyz);
-                vec3 l = 1.0 - g;
-                vec3 i1 = min( g.xyz, l.zxy );
-                vec3 i2 = max( g.xyz, l.zxy );
-                vec3 x1 = x0 - i1 + C.xxx;
-                vec3 x2 = x0 - i2 + C.yyy;
-                vec3 x3 = x0 - -0.5 + C.zzz;
-                i = mod289(i);
-                vec4 p = permute( permute( permute(
-                        i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-                        + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
-                        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-                float n_ = 0.142857142857;
-                vec3  ns = n_ * D.wyz - D.xzx;
-                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
-                vec4 x_ = floor(j * ns.z);
-                vec4 y_ = floor(j - 7.0 * x_ );
-                vec4 x = x_ *ns.x + ns.yyyy;
-                vec4 y = y_ *ns.x + ns.yyyy;
-                vec4 h = 1.0 - abs(x) - abs(y);
-                vec4 b0 = vec4( x.xy, y.xy );
-                vec4 b1 = vec4( x.zw, y.zw );
-                vec4 s0 = floor(b0)*2.0 + 1.0;
-                vec4 s1 = floor(b1)*2.0 + 1.0;
-                vec4 sh = -step(h, vec4(0.0));
-                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
-                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
-                vec3 p0 = vec3(a0.xy,h.x);
-                vec3 p1 = vec3(a0.zw,h.y);
-                vec3 p2 = vec3(a1.xy,h.z);
-                vec3 p3 = vec3(a1.zw,h.w);
-                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
-                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
-                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-                m = m * m;
-                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // MARKAZIY YADRO (Icosahedron)
+            const geometry = new THREE.IcosahedronGeometry(1.2, 1);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x00f3ff, // Neon moviy
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            core = new THREE.Mesh(geometry, material);
+            scene.add(core);
+
+            // ICHKI YADRO
+            const innerGeo = new THREE.IcosahedronGeometry(0.5, 2);
+            const innerMat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false });
+            const innerCore = new THREE.Mesh(innerGeo, innerMat);
+            core.add(innerCore);
+
+            // ZARRACHALAR
+            const pGeo = new THREE.BufferGeometry();
+            const pCount = 1500;
+            const pPos = new Float32Array(pCount * 3);
+            for(let i=0; i<pCount*3; i++) {
+                pPos[i] = (Math.random() - 0.5) * 15; // Kengroq tarqalish
             }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            const pMat = new THREE.PointsMaterial({
+                size: 0.005,
+                color: 0x00f3ff,
+                transparent: true,
+                opacity: 0.5
+            });
+            particles = new THREE.Points(pGeo, pMat);
+            scene.add(particles);
 
-            void main() {
-                vUv = uv;
-                vPosition = position;
-                vNormal = normal;
-                
-                // Geometriyani vaqt bo'yicha deformatsiya qilish (Pulsatsiya)
-                float noise = snoise(position * 0.5 + uTime * 0.2);
-                vec3 newPosition = position + normal * noise * 0.3;
-                
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-            }
-        `;
+            // Resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
 
-        const CORE_FRAGMENT_SHADER = `
-            uniform float uTime;
-            uniform vec3 uColorPrimary;
-            uniform vec3 uColorSecondary;
-            varying vec2 vUv;
-            varying vec3 vPosition;
-            varying vec3 vNormal;
-
-            void main() {
-                // Ranglarni aralashtirish
-                float pulse = sin(uTime * 0.5) * 0.5 + 0.5;
-                vec3 color = mix(uColorPrimary, uColorSecondary, vPosition.y * 0.1 + pulse);
-                
-                // Fresnel effekti (Chetlarini yorqinroq qilish)
-                vec3 viewDirection = normalize(cameraPosition - vPosition);
-                float fresnel = pow(1.0 - dot(viewDirection, vNormal), 3.0);
-                color += fresnel * uColorPrimary * 2.0;
-
-                // Shaffoflik va porlash
-                float alpha = 0.6 + fresnel * 0.4;
-                
-                gl_FragColor = vec4(color, alpha);
-            }
-        `;
-
-        // --- KLASSLAR (Arxitektura) ---
-
-        /**
-         * Tizimning Markaziy Yadrosi.
-         * Custom Shader Material ishlatadi.
-         */
-        class HyperCore {
-            constructor(scene) {
-                this.scene = scene;
-                this.init();
-            }
-
-            init() {
-                // Murakkab geometriya (Icosahedron)
-                const geometry = new THREE.IcosahedronGeometry(CONFIG.coreSize, 20); // Yuqori detallashgan
-                
-                // O'zimiz yozgan shader materiali
-                this.material = new THREE.ShaderMaterial({
-                    vertexShader: CORE_VERTEX_SHADER,
-                    fragmentShader: CORE_FRAGMENT_SHADER,
-                    uniforms: {
-                        uTime: { value: 0 },
-                        uColorPrimary: { value: new THREE.Color(CONFIG.colors.primary) },
-                        uColorSecondary: { value: new THREE.Color(CONFIG.colors.secondary) }
-                    },
-                    transparent: true,
-                    side: THREE.DoubleSide,
-                    wireframe: false // To'liq shakl (wireframe emas)
-                });
-
-                this.mesh = new THREE.Mesh(geometry, this.material);
-                this.scene.add(this.mesh);
-
-                // Yadroning atrofidagi orbital halqalar (Wireframe)
-                this.rings = [];
-                for (let i = 0; i < 3; i++) {
-                   const ringGeo = new THREE.TorusGeometry(CONFIG.coreSize + 1 + i, 0.02, 16, 100);
-                   const ringMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.primary, transparent: true, opacity: 0.3 });
-                   const ring = new THREE.Mesh(ringGeo, ringMat);
-                   ring.rotation.x = Math.random() * Math.PI;
-                   ring.rotation.y = Math.random() * Math.PI;
-                   this.rings.push(ring);
-                   this.scene.add(ring);
-                }
-            }
-
-            update(time) {
-                // Shaderga vaqtni yuborish (jonlantirish uchun)
-                this.material.uniforms.uTime.value = time;
-                
-                // Sekin aylanish
-                this.mesh.rotation.y = time * 0.1;
-                this.mesh.rotation.z = time * 0.05;
-
-                // Halqalarni aylantirish
-                this.rings.forEach((ring, i) => {
-                    ring.rotation.x += 0.002 * (i + 1);
-                    ring.rotation.y += 0.001 * (i + 1);
-                });
-            }
+            animate();
         }
 
-        /**
-         * Zarrachalar Maydoni (Debris Field).
-         * InstancedMesh ishlatadi (Yuqori samaradorlik uchun).
-         */
-        class ParticleSystem {
-            constructor(scene) {
-                this.scene = scene;
-                this.count = CONFIG.particleCount;
-                this.init();
-            }
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.0005;
 
-            init() {
-                const geometry = new THREE.TetrahedronGeometry(0.05, 0);
-                const material = new THREE.MeshBasicMaterial({
-                    color: 0xffffff,
-                    transparent: true,
-                    opacity: 0.6,
-                    blending: THREE.AdditiveBlending // Yorug'lik qo'shilishi effekti
-                });
+            // Aylanishlar
+            core.rotation.x += 0.001;
+            core.rotation.y += 0.002;
+            
+            // Nafas olish effekti
+            const scale = 1 + Math.sin(time) * 0.1;
+            core.scale.set(scale, scale, scale);
 
-                this.mesh = new THREE.InstancedMesh(geometry, material, this.count);
-                
-                const dummy = new THREE.Object3D();
-                for (let i = 0; i < this.count; i++) {
-                    // Tasodifiy sferik joylashuv
-                    const r = 10 + Math.random() * 30; // Yadro va kamera orasida
-                    const theta = Math.random() * Math.PI * 2;
-                    const phi = Math.acos(2 * Math.random() - 1);
-                    
-                    dummy.position.set(
-                        r * Math.sin(phi) * Math.cos(theta),
-                        r * Math.sin(phi) * Math.sin(theta),
-                        r * Math.cos(phi)
-                    );
-                    dummy.rotation.set(Math.random(), Math.random(), Math.random());
-                    dummy.scale.setScalar(Math.random() * 0.5 + 0.5);
-                    dummy.updateMatrix();
-                    this.mesh.setMatrixAt(i, dummy.matrix);
-                }
-                this.mesh.instanceMatrix.needsUpdate = true;
-                this.scene.add(this.mesh);
-            }
+            // Zarrachalar harakati
+            particles.rotation.y = -time * 0.05;
 
-            update(time) {
-                // Butun tizimni sekin aylantirish
-                this.mesh.rotation.y = time * 0.05;
-            }
+            // Sichqonchaga reaksiya (yengil)
+            // (Agar murakkablik kerak bo'lmasa, shart emas)
+
+            renderer.render(scene, camera);
         }
 
-        /**
-         * Asosiy Dvigatel (The World Orchestrator).
-         * Barcha qismlarni birlashtiradi va boshqaradi.
-         */
-        class HyperEngine {
-            constructor() {
-                this.time = 0;
-                this.mouseX = 0;
-                this.mouseY = 0;
-                this.targetMouseX = 0;
-                this.targetMouseY = 0;
-
-                this.initThree();
-                this.initPostProcessing(); // "Wow" effekt shu yerda
-                this.createWorld();
-                this.addEventListeners();
-                this.startRenderLoop();
-            }
-
-            initThree() {
-                this.scene = new THREE.Scene();
-                // Kosmik tuman
-                this.scene.fog = new THREE.FogExp2(0x000000, 0.02);
-
-                this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-                this.camera.position.z = CONFIG.cameraZ;
-
-                this.renderer = new THREE.WebGLRenderer({ 
-                    antialias: false, // Post-processing borligi uchun antialias shart emas (resurs tejash)
-                    powerPreference: "high-performance"
+        // --- 3. SCROLL ANIMATSIYALARI ---
+        function triggerScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
                 });
-                this.renderer.setSize(window.innerWidth, window.innerHeight);
-                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Retina ekranlar uchun optimizatsiya
-                this.renderer.toneMapping = THREE.ReinhardToneMapping;
-                document.body.appendChild(this.renderer.domElement);
+            }, { threshold: 0.1 });
 
-                // Atrof-muhit yoritilishi
-                const ambientLight = new THREE.AmbientLight(0x222222);
-                this.scene.add(ambientLight);
-
-                // Asosiy yorug'lik manbai (Yadrodan chiqayotgandek)
-                const pointLight = new THREE.PointLight(CONFIG.colors.primary, 2, 50);
-                pointLight.position.set(0, 0, 0);
-                this.scene.add(pointLight);
-            }
-
-            // --- POST-PROCESSING (Bloom/Glow) ---
-            initPostProcessing() {
-                this.composer = new THREE.EffectComposer(this.renderer);
-                
-                // 1. Oddiy render qatlami
-                const renderPass = new THREE.RenderPass(this.scene, this.camera);
-                this.composer.addPass(renderPass);
-
-                // 2. Unreal Bloom qatlami (Porlash)
-                const bloomPass = new THREE.UnrealBloomPass(
-                    new THREE.Vector2(window.innerWidth, window.innerHeight),
-                    CONFIG.bloomStrength,
-                    CONFIG.bloomRadius,
-                    CONFIG.bloomThreshold
-                );
-                this.composer.addPass(bloomPass);
-            }
-
-            createWorld() {
-                this.core = new HyperCore(this.scene);
-                this.particles = new ParticleSystem(this.scene);
-            }
-
-            addEventListeners() {
-                window.addEventListener('resize', this.onResize.bind(this));
-                document.addEventListener('mousemove', this.onMouseMove.bind(this));
-                // Mobil qurilmalar uchun gyro/touch qo'shish mumkin (kelajakda)
-            }
-
-            onResize() {
-                this.camera.aspect = window.innerWidth / window.innerHeight;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(window.innerWidth, window.innerHeight);
-                this.composer.setSize(window.innerWidth, window.innerHeight);
-            }
-
-            onMouseMove(event) {
-                // Sichqoncha koordinatalarini -1 dan 1 gacha normallashtirish
-                this.targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                this.targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-            }
-
-            // --- RENDER LOOP (Tizim yuragi) ---
-            startRenderLoop() {
-                const animate = () => {
-                    requestAnimationFrame(animate);
-                    this.time += 0.01;
-
-                    // Sichqoncha harakatini silliqlash (Lerp)
-                    this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
-                    this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
-
-                    // Kamerani sichqonchaga qarab biroz burish (Parallax)
-                    this.camera.position.x += (this.mouseX * 2 - this.camera.position.x) * 0.05;
-                    this.camera.position.y += (this.mouseY * 2 - this.camera.position.y) * 0.05;
-                    this.camera.lookAt(this.scene.position);
-
-                    // Obyektlarni yangilash
-                    this.core.update(this.time);
-                    this.particles.update(this.time);
-
-                    // Oddiy render emas, Composer orqali render qilish (Bloom bilan)
-                    this.composer.render();
-                };
-                animate();
-            }
+            document.querySelectorAll('.fade-in').forEach((el) => {
+                observer.observe(el);
+            });
         }
 
-        // --- TIZIMNI ISHGA TUSHIRISH ---
-        // Sahifa yuklangandan so'ng darhol ishga tushadi.
-        window.addEventListener('load', () => {
-             new HyperEngine();
-             console.log("%c ΛTOMIC HYPERCORE INITIATED ", "background: #000; color: #00f3ff; font-size: 1.5em; padding: 10px; border: 2px solid #00f3ff;");
-        });
+        // Ishga tushirish
+        init3D();
 
     </script>
 </body>
