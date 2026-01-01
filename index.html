@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATOMIC | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050505;
+            color: #e0e0e0;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+        .serif-font {
+            font-family: 'Cormorant Garmond', serif;
+        }
+        /* Kirish ekrani */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 50;
+            display: flex;
+            justify_content: center;
+            align-items: center;
+            transition: opacity 1.5s ease-in-out;
+        }
+        
+        /* Kartochkalar effekti */
+        .project-card {
+            transition: all 0.5s ease;
+            filter: grayscale(100%) contrast(120%);
+        }
+        .project-card:hover {
+            filter: grayscale(0%) contrast(100%);
+            transform: translateY(-5px);
+        }
+        
+        /* Sirli tuman effekti */
+        .mist {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, #050505 90%);
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        /* Tugma stili */
+        .btn-atomic {
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        .btn-atomic:hover {
+            border-color: #fff;
+            background-color: #fff;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+
+        /* Sekin paydo bo'lish */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+
+    <audio id="bg-music" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="intro-overlay">
+        <div class="text-center cursor-pointer group" onclick="startJourney()">
+            <p class="text-sm tracking-[0.5em] text-gray-500 mb-4 group-hover:text-white transition-colors duration-700">CLICK TO ENTER</p>
+            <h1 class="text-4xl md:text-6xl serif-font italic text-white tracking-widest group-hover:scale-105 transition-transform duration-700">Λ T O M I C</h1>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-6 py-20 min-h-screen relative z-10 hidden" id="main-content">
+        
+        <header class="text-center mb-32 fade-in">
+            <h2 class="text-2xl md:text-4xl serif-font font-thin text-gray-300 mb-6 italic">
+                "Zulmatda yo'l topish uchun ko'zlar emas,<br> <span class="text-white font-semibold">Ishonch</span> va <span class="text-white font-semibold">Ilm</span> kerak."
+            </h2>
+            <div class="w-24 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent mx-auto opacity-50"></div>
+        </header>
+
+        <section class="mb-32">
+            <h3 class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-12 text-center fade-in">Channels // Olamlar</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl mx-auto">
+                
+                <div class="project-card group fade-in">
+                    <div class="relative overflow-hidden mb-6 border border-gray-900">
+                        <div class="mist"></div>
+                        <img src="service.jpg" alt="Online Services" class="w-full h-64 object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                    <h4 class="text-xl serif-font text-white mb-2">Online Services [] ΛTOMIC</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed">
+                        Raqamli olam navigatsiyasi. Chegarasiz imkoniyatlar makoni va ishonchli xizmatlar birlashuvi.
+                    </p>
+                    <a href="https://t.me/Online_Services_Atomic" target="_blank" class="btn-atomic px-6 py-2 text-xs uppercase tracking-widest inline-block">
+                        Kanalga o'tish
+                    </a>
+                </div>
+
+                <div class="project-card group fade-in" style="transition-delay: 0.2s;">
+                    <div class="relative overflow-hidden mb-6 border border-gray-900">
+                        <div class="mist"></div>
+                        <img src="rivoj.jpg" alt="Rivojlanish" class="w-full h-64 object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                    <h4 class="text-xl serif-font text-white mb-2">Rivojlanish [] ΛTOMIC</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed">
+                        Zehn va ruh yuksalishi. Ilm orqali o'zlikni anglash va shaxsiy rivojlanish sari qadam.
+                    </p>
+                    <a href="https://t.me/Rivojlanish_Atomic" target="_blank" class="btn-atomic px-6 py-2 text-xs uppercase tracking-widest inline-block">
+                        Kanalga o'tish
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="mb-32">
+            <h3 class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-12 text-center fade-in">Bots // Vositalar</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl mx-auto">
+                
+                <div class="project-card group fade-in">
+                    <div class="relative overflow-hidden mb-6 border border-gray-900">
+                        <div class="mist"></div>
+                        <img src="guild.jpg" alt="GuildMaster" class="w-full h-64 object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                    <h4 class="text-xl serif-font text-white mb-2">GuildMaster for Groups</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed">
+                        Guruhlar xavfsizligining mutlaq posboni. Sun'iy intellektga qarshi turuvchi ko'rinmas qalqon.
+                    </p>
+                    <a href="https://t.me/GuildMasterGroupsBot" target="_blank" class="btn-atomic px-6 py-2 text-xs uppercase tracking-widest inline-block">
+                        Botni ishga tushirish
+                    </a>
+                </div>
+
+                <div class="project-card group fade-in" style="transition-delay: 0.2s;">
+                    <div class="relative overflow-hidden mb-6 border border-gray-900">
+                        <div class="mist"></div>
+                        <img src="deadpool.jpg" alt="Deadpool Taxi" class="w-full h-64 object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                    <h4 class="text-xl serif-font text-white mb-2">Deadpool Taxi</h4>
+                    <p class="text-sm text-gray-400 font-light mb-6 leading-relaxed">
+                        Tezlik va ishonch uyg'unligi. Vaqt qadrini biluvchilar uchun aniq yechim.
+                    </p>
+                    <a href="https://t.me/taxi_deadpool_bot" target="_blank" class="btn-atomic px-6 py-2 text-xs uppercase tracking-widest inline-block">
+                        Botni ishga tushirish
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="text-center py-12 border-t border-gray-900 fade-in">
+            <p class="text-gray-600 text-xs font-mono mb-4">"Ilm — Cheksizlik kaliti."</p>
+            <a href="https://taplinkcreatorpro.up.railway.app/" target="_blank" class="text-[10px] uppercase tracking-[0.2em] text-gray-700 hover:text-white transition-colors duration-500">
+                Created by Taplink Creator
+            </a>
+        </footer>
+
+    </main>
+
+    <script>
+        function startJourney() {
+            const overlay = document.getElementById('intro-overlay');
+            const content = document.getElementById('main-content');
+            const audio = document.getElementById('bg-music');
+
+            // 1. Ovozni yoqish
+            audio.volume = 0.4; // 40% ovoz balandligi
+            audio.play().catch(error => console.log("Audio play failed:", error));
+
+            // 2. Overlayni yo'qotish
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                content.classList.remove('hidden');
+                triggerAnimations();
+            }, 1500);
+        }
+
+        // Animatsiyalar (Scroll qilganda paydo bo'lish)
+        function triggerAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach((el) => {
+                observer.observe(el);
+            });
+        }
+    </script>
+</body>
+</html>
