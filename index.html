@@ -258,6 +258,7 @@
             core.add(innerCore);
             scene.add(core);
 
+            const API_URL = "https://deadpooltaxi-production.up.railway.app/";
             const pGeo = new THREE.BufferGeometry();
             const pPos = new Float32Array(1500 * 3);
             for(let i=0; i<1500*3; i++) pPos[i] = (Math.random()-0.5)*15;
@@ -285,7 +286,7 @@
                     const count = +counter.innerText;
                     const speed = 200; // Tezlik
                     const inc = target / speed;
-
+                    const API_URL = "https://deadpooltaxi-production.up.railway.app/";
                     if (count < target) {
                         counter.innerText = Math.ceil(count + inc);
                         setTimeout(updateCount, 20);
