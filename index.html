@@ -78,6 +78,8 @@
         /* Animations */
         .fade-in { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
         .visible { opacity: 1; transform: translateY(0); }
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
 <body class="antialiased selection:bg-cyan-500 selection:text-black">
@@ -95,7 +97,7 @@
             <p class="mb-8 text-gray-400">"Haqiqat sirtda emas, kodlar ichida yashiringan."</p>
             <div class="border-t border-green-900 pt-4">
                 <p>> SECRET CONTACT:</p>
-                <a href="https://t.me/Al_Abdul_Aziz" class="text-white hover:text-cyan-400 underline decoration-dotted">@Admin_Contact</a>
+                <a href="https://t.me/Al_Abdul_Aziz" class="text-white hover:text-cyan-400 underline decoration-dotted">@Al_Abdul_Aziz</a>
             </div>
             <p class="mt-8 text-xs blink">_Press click to exit_</p>
         </div>
@@ -201,7 +203,7 @@
                     <p class="text-[10px] uppercase tracking-widest text-gray-500">Atomic Minds</p>
                 </div>
                 <div>
-                    <h5 class="text-4xl md:text-5xl font-mono text-cyan-400 mb-2 counter" data-target="540">0</h5>
+                    <h5 id="stat-users" class="text-4xl md:text-5xl font-mono text-cyan-400 mb-2 counter" data-target="540">0</h5>
                     <p class="text-[10px] uppercase tracking-widest text-gray-500">Bot Users</p>
                 </div>
                 <div>
@@ -213,8 +215,8 @@
 
         <footer class="text-center py-16 relative z-10 fade-in border-t border-gray-900/50 backdrop-blur-sm">
             <p class="text-gray-500 text-[10px] font-mono mb-4 tracking-widest">SYSTEM STATUS: STABLE</p>
-            <a href="https://taplinkcreatorpro.up.railway.app/" target="_blank" class="group relative inline-block">
-                <span class="text-[10px] uppercase tracking-[0.3em] text-gray-400 group-hover:text-cyan-400 transition-colors duration-300">Created by Taplink Creator</span>
+            <a href="https://t.me/Al_Abdul_Aziz" target="_blank" class="group relative inline-block">
+                <span class="text-[10px] uppercase tracking-[0.3em] text-gray-400 group-hover:text-cyan-400 transition-colors duration-300">Created by @Al_Abdul_Aziz</span>
             </a>
         </footer>
     </main>
@@ -258,7 +260,7 @@
             core.add(innerCore);
             scene.add(core);
 
-            const API_URL = "https://deadpooltaxi-production.up.railway.app/";
+            // Zarrachalar (Asl kodingizdagi kabi)
             const pGeo = new THREE.BufferGeometry();
             const pPos = new Float32Array(1500 * 3);
             for(let i=0; i<1500*3; i++) pPos[i] = (Math.random()-0.5)*15;
@@ -277,8 +279,27 @@
         }
         init3D();
 
-        // --- 3. STATISTIKA ANIMATSIYASI ---
-        function startCounters() {
+        // --- 3. STATISTIKA ANIMATSIYASI (API BILAN) ---
+        // SIZNING BOTINGIZNING RAILWAY API MANZILI:
+        const API_URL = "https://deadpooltaxi-production.up.railway.app/api/stats";
+
+        async function startCounters() {
+            // 1. Internetdan botingizdan ma'lumot olishga urinib ko'ramiz
+            try {
+                const response = await fetch(API_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Agar bot "users" degan raqam yuborsa, HTMLdagi raqamni o'zgartiramiz
+                    if (data.users) {
+                        document.getElementById('stat-users').setAttribute('data-target', data.users);
+                    }
+                }
+            } catch (error) {
+                console.log("Bot bilan bog'lanib bo'lmadi. Standart raqamlar ishlatiladi.");
+            }
+
+            // 2. Animatsiyani boshlash (Standard kod)
             const counters = document.querySelectorAll('.counter');
             counters.forEach(counter => {
                 const updateCount = () => {
@@ -286,7 +307,7 @@
                     const count = +counter.innerText;
                     const speed = 200; // Tezlik
                     const inc = target / speed;
-                    const API_URL = "https://deadpooltaxi-production.up.railway.app/";
+                    
                     if (count < target) {
                         counter.innerText = Math.ceil(count + inc);
                         setTimeout(updateCount, 20);
@@ -319,7 +340,6 @@
             }
             if (keySequence.join('') === secretCode) {
                 document.getElementById('secret-terminal').style.display = 'flex';
-                // Ovoz effekti bo'lsa zo'r bo'lardi
             }
         });
     </script>
